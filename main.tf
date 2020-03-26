@@ -60,16 +60,16 @@ resource azurerm_network_interface NIC {
   enable_ip_forwarding          = var.nic_enable_ip_forwarding
   enable_accelerated_networking = var.nic_enable_accelerated_networking
   #network_security_group_id     = var.use_nic_nsg ? azurerm_network_security_group.NSG[0].id : null
-  dns_servers                   = var.dnsServers
+  dns_servers = var.dnsServers
   dynamic "ip_configuration" {
     for_each = var.nic_ip_configuration.private_ip_address_allocation
     content {
-      name                                    = "ipconfig${ip_configuration.key + 1}"
-      subnet_id                               = data.azurerm_subnet.subnet.id
-      private_ip_address                      = var.nic_ip_configuration.private_ip_address[ip_configuration.key]
-      private_ip_address_allocation           = var.nic_ip_configuration.private_ip_address_allocation[ip_configuration.key]
-      public_ip_address_id                    = var.public_ip ? azurerm_public_ip.VM-EXT-PubIP[ip_configuration.key].id : ""
-      primary                                 = ip_configuration.key == 0 ? true : false
+      name                          = "ipconfig${ip_configuration.key + 1}"
+      subnet_id                     = data.azurerm_subnet.subnet.id
+      private_ip_address            = var.nic_ip_configuration.private_ip_address[ip_configuration.key]
+      private_ip_address_allocation = var.nic_ip_configuration.private_ip_address_allocation[ip_configuration.key]
+      public_ip_address_id          = var.public_ip ? azurerm_public_ip.VM-EXT-PubIP[ip_configuration.key].id : ""
+      primary                       = ip_configuration.key == 0 ? true : false
       #load_balancer_backend_address_pools_ids = var.load_balancer_backend_address_pools_ids[ip_configuration.key]
     }
   }
@@ -88,18 +88,16 @@ resource azurerm_virtual_machine VM {
   delete_os_disk_on_termination    = "true"
   license_type                     = var.license_type == null ? null : var.license_type
   availability_set_id              = var.availability_set_id
-  os_profile {
-    computer_name  = var.name
-    admin_username = var.admin_username
-    admin_password = var.admin_password
-    custom_data    = var.custom_data
-  }
-  storage_image_reference {
-    publisher = var.storage_image_reference.publisher
-    offer     = var.storage_image_reference.offer
-    sku       = var.storage_image_reference.sku
-    version   = var.storage_image_reference.version
-  }
+  #os_profile {
+  #  computer_name  = var.name
+  #  admin_username = var.admin_username
+  #  admin_password = var.admin_password
+  #  custom_data    = var.custom_data
+  #}
+  #storage_image_reference {
+  #  id = var.custom_image_id
+  #}
+  /*
   dynamic "plan" {
     for_each = local.plan
     content {
@@ -108,6 +106,7 @@ resource azurerm_virtual_machine VM {
       publisher = local.plan[0].publisher
     }
   }
+  */
   os_profile_linux_config {
     disable_password_authentication = var.disable_password_authentication
     dynamic "ssh_keys" {
@@ -119,12 +118,13 @@ resource azurerm_virtual_machine VM {
     }
   }
   storage_os_disk {
-    name              = "${var.name}-osdisk1"
-    caching           = var.storage_os_disk.caching
-    create_option     = var.storage_os_disk.create_option
-    os_type           = var.storage_os_disk.os_type
-    disk_size_gb      = var.storage_os_disk.disk_size_gb
-    managed_disk_type = var.os_managed_disk_type
+    name          = "${var.name}-osdisk1"
+    #caching       = var.storage_os_disk.caching
+    create_option = "Attach"
+    os_type       = var.storage_os_disk.os_type
+    # disk_size_gb  = var.storage_os_disk.disk_size_gb
+    vhd_uri       = var.vhd_uri
+    # managed_disk_type = var.os_managed_disk_type
   }
   dynamic "storage_data_disk" {
     for_each = var.data_disk_sizes_gb
