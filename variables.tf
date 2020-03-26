@@ -110,6 +110,10 @@ variable "public_ip" {
   default     = false
 }
 
+variable "vhd_uri" {
+  description = "The uri of the vhd Image to attach to the Virtual Machine."
+}
+
 variable "resource_group_name" {
   description = "Name of the resourcegroup that will contain the VM resources"
 }
@@ -170,7 +174,7 @@ variable "storage_os_disk" {
   default = {
     caching       = "ReadWrite"
     create_option = "FromImage"
-    os_type       = null
+    os_type       = "Linux"
     disk_size_gb  = null
   }
 }
