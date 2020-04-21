@@ -37,6 +37,4 @@ resource "azurerm_virtual_machine_extension" "AzureDiskEncryption" {
           "SequenceVersion": "${random_uuid.SequenceVersion.result}"
         }
   SETTINGS
-
-  tags = var.tags
 }

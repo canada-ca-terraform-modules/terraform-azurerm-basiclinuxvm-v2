@@ -26,7 +26,7 @@ Optional (depending on options configured):
 
 ```terraform
 module "dockerweb" {
-  source = "github.com/canada-ca-terraform-modules/terraform-azurerm-basiclinuxvm-v2?ref=20200322.1"
+  source = "github.com/canada-ca-terraform-modules/terraform-azurerm-basiclinuxvm-v2?ref=20200421.1"
 
   name                              = "dockerweb"
   resource_group_name               = "some-RG-Name"
@@ -292,6 +292,7 @@ shutdownConfig = {
 
 | Date     | Release    | Change                                                                                       |
 | -------- | ---------- | -------------------------------------------------------------------------------------------- |
+| 20200421 | 20200421.1 | Removing tags from extensions              |
 | 20191218 | 20191218   | Cleanup code. Change how OMS workspace info is passed to module. WARNING!                    |
 | 20191125 | 20191125.1 | Add nic_depends_on support                                                                   |
 | 20191015 | 20191015.1 | Adopt new VM resource naming convention                                                      |
